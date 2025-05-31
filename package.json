@@ -1,0 +1,25 @@
+{
+  "name": "iou",
+  "version": "1.0.0",
+  "description": "**iou** is a simple group expense tracker for friends on trips, hangouts, or shared events. Instead of splitting every bill in real time, just log who paid what — and let the app calculate who owes who by the end.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.15.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
