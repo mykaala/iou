@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Join a Group - IOU</title>
+	</head>
+	<body>
+		<h1>Join a Group</h1>
+
+		<form id="join-form">
+			<input type="text" id="invite-code" placeholder="Enter invite code" required />
+			<button type="submit">Join</button>
+		</form>
+
+		<p id="status"></p>
+
+		<script>
+			document.getElementById('join-form').addEventListener('submit', async (e) => {
+				e.preventDefault();
+
+				const code = document.getElementById('invite-code').value.trim().toUpperCase();
+				const res = await fetch(`/groups/join/${code}`, {
+					method: 'POST',
+					credentials: 'include'
+				});
+
+				const status = document.getElementById('status');
+				if (res.ok) {
+					const data = await res.json();
+					window.location.href = `/group.html?id=${data.groupId}`;
+				} else {
+					status.textContent = '❌ Invalid or expired invite code';
+				}
+			});
+		</script>
+	</body>
+</html>

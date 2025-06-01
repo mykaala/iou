@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Group Dashboard</title>
+	</head>
+	<body>
+		<h1 id="group-name">Loading...</h1>
+		<p><strong>Invite Code:</strong> <span id="invite-code"></span></p>
+		<h3>Members:</h3>
+		<ul id="members-list"></ul>
+		<div id="admin-controls" style="margin-top: 20px; display: none">
+			<h3>Admin Controls</h3>
+			<button id="delete-group">🗑️ Delete Group</button>
+		</div>
+
+		<script>
+			async function loadGroup() {
+				const params = new URLSearchParams(window.location.search);
+				const groupId = params.get('id');
+
+				const res = await fetch(`/groups/${groupId}`, {
+					credentials: 'include'
+				});
+
+				if (!res.ok) {
+					document.body.innerHTML = '<p>Error loading group</p>';
+					return;
+				}
+
+				const group = await res.json();
+				document.getElementById('group-name').textContent = group.name;
+				document.getElementById('invite-code').textContent = group.inviteCode;
+
+				const membersList = document.getElementById('members-list');
+				group.members.forEach((m) => {
+					const li = document.createElement('li');
+					li.textContent = m.displayName || m.email;
+					membersList.appendChild(li);
+				});
+
+				// 👑 If current user is admin, show controls
+				const resUser = await fetch('/auth/whoami', { credentials: 'include' });
+				const user = await resUser.json();
+
+				if (user._id === group.createdBy) {
+					document.getElementById('admin-controls').style.display = 'block';
+					document.getElementById('delete-group').addEventListener('click', async () => {
+						const confirmDelete = confirm('Are you sure you want to delete this group?');
+						if (!confirmDelete) return;
+
+						const delRes = await fetch(`/groups/${groupId}`, {
+							method: 'DELETE',
+							credentials: 'include'
+						});
+
+						if (delRes.ok) {
+							alert('Group deleted');
+							window.location.href = '/dashboard'; // or home
+						} else {
+							alert('Error deleting group');
+						}
+					});
+				}
+			}
+
+			loadGroup();
+		</script>
+	</body>
+</html>

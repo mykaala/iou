@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Create Group - IOU</title>
+	</head>
+	<body>
+		<h1>Create a Group</h1>
+
+		<form id="group-form">
+			<input type="text" id="group-name" placeholder="Group name" required />
+			<button type="submit">Create</button>
+		</form>
+
+		<p id="status"></p>
+
+		<script>
+			document.getElementById('group-form').addEventListener('submit', async (e) => {
+				e.preventDefault();
+
+				const groupName = document.getElementById('group-name').value;
+
+				const res = await fetch('/groups', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					credentials: 'include', // important: send cookie for session auth
+					body: JSON.stringify({ name: groupName })
+				});
+
+				const status = document.getElementById('status');
+				if (res.ok) {
+					const group = await res.json();
+					window.location.href = `/group.html?id=${group._id}`;
+				} else {
+					status.textContent = 'Error creating group';
+				}
+			});
+		</script>
+	</body>
+</html>
